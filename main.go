@@ -1,7 +1,9 @@
 package main
 
-import "fmt"
+import (
+	"kubed/cmd"
+)
 
 func main() {
-	fmt.Println("Hello World!")
+	cmd.Execute()
 }
