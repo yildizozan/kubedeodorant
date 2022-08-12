@@ -5,7 +5,7 @@
 *.so
 *.dylib
 kubed
-
+inventory/
 # Test binary, built with `go test -c`
 *.test
 

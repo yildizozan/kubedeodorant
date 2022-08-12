@@ -9,7 +9,7 @@ import (
 
 func YamlParser() {
 	
-     yfile, err := ioutil.ReadFile("./yamlparser/test.yaml")
+     yfile, err := ioutil.ReadFile("./config.yaml")
 
      if err != nil {
 
