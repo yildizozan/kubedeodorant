@@ -9,8 +9,10 @@ import (
 
 var flagVerbose bool
 
+// TODO: config yamlda verdiğimiz değerleri, flag olarak path'ini verdiğimiz klasörde override edecek. 
+
 var cmdRoot = &cobra.Command{
-	Use:   "kubed",
+	Use:   "kubedeo",
 	Short: "Kubedeodorant",
 	Run: func(cmd *cobra.Command, args []string) {
 		greetings.Hi()
