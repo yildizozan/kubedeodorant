@@ -30,7 +30,7 @@ func DirectoryList() map[int]string {
 	for i, file := range files {
 		//fmt.Println(file.Name())
 		directories[i] = file.Name()
-		fmt.Printf(" " + directories[i])
+		fmt.Printf("\n" + directories[i])
 	}
 
 	return directories
@@ -38,28 +38,23 @@ func DirectoryList() map[int]string {
 
 func YamlParser() {
 
-	yfile, err := ioutil.ReadFile("./config.yaml")
-
-	if err != nil {
-		log.Fatal(err)
-	}
-
-	data := make(map[int]string)
 	fileNames := DirectoryList()
 
-	err2 := yaml.Unmarshal(yfile, &data)
+	for i := range fileNames {
 
-	if err2 != nil {
-		log.Fatal(err2)
-	}
+		yfile, err := ioutil.ReadFile("../inventory/" + fileNames[i])
 
-	for i := range data {
-		fmt.Println(i, err)
-		err := MyFile{
-			fileName: fileNames[i],
-			content:  data,
+		if err != nil {
+			log.Fatal(err)
 		}
-		fmt.Printf("%v", err)
+
+		data := make(map[int]string)
+		err2 := yaml.Unmarshal(yfile, &data)
+
+		if err2 != nil {
+			log.Fatal(err2)
+		}
+		fmt.Println(data)
 	}
 }
 
