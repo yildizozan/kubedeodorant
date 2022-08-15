@@ -9,5 +9,5 @@ import (
 func main() {
 	cmd.Execute()
 	yamlparser.DirectoryList()
-	//yamlparser.YamlParser()
+	yamlparser.YamlParser()
 }

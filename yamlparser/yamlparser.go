@@ -42,13 +42,14 @@ func YamlParser() {
 
 	for i := range fileNames {
 
-		yfile, err := ioutil.ReadFile("../inventory/" + fileNames[i])
+		fmt.Println(i)
+		yfile, err := ioutil.ReadFile("config.yaml")
 
 		if err != nil {
 			log.Fatal(err)
 		}
 
-		data := make(map[int]string)
+		data := make(map[interface{}]interface{})
 		err2 := yaml.Unmarshal(yfile, &data)
 
 		if err2 != nil {
