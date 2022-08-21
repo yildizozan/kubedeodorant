@@ -1,12 +1,11 @@
 package yamlparser
 
 import (
-	"container/list"
 	"fmt"
+	"io/fs"
 	"io/ioutil"
 	"log"
 	"os"
-	"path/filepath"
 	"strings"
 
 	"gopkg.in/yaml.v3"
@@ -17,22 +16,21 @@ type FileDatas struct {
 	Content  map[interface{}]interface{}
 }
 
-func filePath(folderName string) *list.List {
-	fileList := list.New()
-	err := filepath.Walk(folderName,
-		func(path string, _ os.FileInfo, err error) error {
-			if err != nil {
-				return err
-			}
-			if strings.HasSuffix(path, ".yaml") || strings.HasSuffix(path, ".yml") {
-				fileList.PushFront(path)
-			}
-			return nil
-		})
-	if err != nil {
-		log.Fatal(err)
-	}
-	return fileList
+func filePath() {
+	root := "./inventory"
+	fileSystem := os.DirFS(root)
+	var pathSlice []string
+
+	fs.WalkDir(fileSystem, ".", func(path string, d fs.DirEntry, err error) error {
+		if err != nil {
+			log.Fatal(err)
+		}
+		if strings.HasSuffix(path, ".yaml") || strings.HasSuffix(path, ".yml") {
+			//fmt.Println(path)
+			pathSlice = append(pathSlice, path)
+		}
+		return nil
+	})
 }
 
 func parseYaml(fileName string) map[interface{}]interface{} {
@@ -58,11 +56,7 @@ func Execute() {
 	var fileName = "config.yaml"
 	fileData := parseYaml(fileName)
 	fmt.Println(fileData)
-	fileNames := filePath("inventory")
-	fmt.Println(fileNames)
-	for i := 0; i < 10; i++ {
-		fmt.Println(fileName[i])
-	}
+	filePath()
 }
 
 func init() {
