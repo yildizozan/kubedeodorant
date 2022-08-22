@@ -1,2 +1,6 @@
-key1: value1
-key2: value2
+theme: dark
+env: prod
+tier: backend
+creator: serhatkubi
+owner: ozan
+kube_config_dir: home/.kube/config

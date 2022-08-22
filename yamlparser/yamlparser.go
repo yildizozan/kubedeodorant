@@ -4,16 +4,36 @@ import (
 	"fmt"
 	"io/ioutil"
 	"log"
-
+	"os"
+	"bufio"
 	"gopkg.in/yaml.v3"
 )
 
 type FileDatas struct {
 	FileName string
-	Content  map[interface{}]interface{}
+	Content  []string
 }
 
-func parseYaml(fileName string) map[interface{}]interface{} {
+
+func readLineByLine(filePath string){
+file, err := os.Open(filePath)
+if err != nil {
+	log.Fatal(err)
+}
+defer file.Close()
+
+scanner := bufio.NewScanner(file)
+// optionally, resize scanner's capacity for lines over 64K, see next example
+for scanner.Scan() {
+	fmt.Println(scanner.Text())
+}
+
+if err := scanner.Err(); err != nil {
+	log.Fatal(err)
+}
+}
+
+func parseYaml(fileName string) map[string]string {
 
 	fileObj, err := ioutil.ReadFile("./" + fileName)
 
@@ -21,7 +41,7 @@ func parseYaml(fileName string) map[interface{}]interface{} {
 		log.Fatal(err)
 	}
 
-	data := make(map[interface{}]interface{})
+	data := make(map[string]string)
 
 	err2 := yaml.Unmarshal(fileObj, &data)
 
@@ -34,9 +54,7 @@ func parseYaml(fileName string) map[interface{}]interface{} {
 
 func Execute() {
 
-	var fileName = "config.yaml"
-	fileData := parseYaml(fileName)
-	fmt.Println(fileData)
+	readLineByLine("config.yaml")
 
 }
 
