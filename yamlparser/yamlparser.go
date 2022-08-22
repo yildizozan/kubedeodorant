@@ -19,9 +19,7 @@ type Line struct {
 
 func parseLine(line string) Line{
 	parts := strings.Split(line, " ")
-
 	var temp Line
-
 
 	if (len(parts) == 2 ){
 	temp.key = parts[0]
@@ -37,7 +35,9 @@ func parseLine(line string) Line{
 }
 
 
-func readLineByLine(filePath string){
+func readLineByLine(filePath string) []Line{
+var lines []Line
+
 file, err := os.Open(filePath)
 if err != nil {
 	log.Fatal(err)
@@ -46,12 +46,13 @@ defer file.Close()
 
 scanner := bufio.NewScanner(file)
 for scanner.Scan() {
-	fmt.Println(scanner.Text())
+	lines = append(lines, parseLine(scanner.Text()))
 }
 
 if err := scanner.Err(); err != nil {
 	log.Fatal(err)
 }
+return lines
 }
 
 func parseYaml(fileName string) map[string]string {
@@ -75,8 +76,8 @@ func parseYaml(fileName string) map[string]string {
 
 func Execute() {
 
-	readLineByLine("config.yaml")
-
+	allLines := readLineByLine("config.yaml")
+	fmt.Println(allLines)
 }
 
 func init() {
