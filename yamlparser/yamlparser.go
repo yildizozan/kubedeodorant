@@ -7,11 +7,33 @@ import (
 	"os"
 	"bufio"
 	"gopkg.in/yaml.v3"
+	"strings"
 )
 
-type FileDatas struct {
-	FileName string
-	Content  []string
+type Line struct {
+	isComment bool
+	key string
+	value string
+
+}
+
+func parseLine(line string) Line{
+	parts := strings.Split(line, " ")
+
+	var temp Line
+
+
+	if (len(parts) == 2 ){
+	temp.key = parts[0]
+	temp.value = parts[1]
+	temp.isComment = false
+	} else if (len(parts) == 3) {
+	temp.key = parts[0]
+	temp.value = parts[1]
+	temp.isComment = false
+	} 
+	
+	return temp
 }
 
 
@@ -23,7 +45,6 @@ if err != nil {
 defer file.Close()
 
 scanner := bufio.NewScanner(file)
-// optionally, resize scanner's capacity for lines over 64K, see next example
 for scanner.Scan() {
 	fmt.Println(scanner.Text())
 }
