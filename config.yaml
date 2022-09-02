@@ -1,6 +1,2 @@
-theme: dark
-env: prod
-tier: backend
-creator: serhatkubi
-owner: ozan
-kube_config_dir: home/.kube/config
+kube_cert_dir: /mesutozanconfig
+kube_config_dir: /serhatconfig

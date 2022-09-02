@@ -1,7 +1,6 @@
 package yamlparser
 
 import (
-	"fmt"
 	"io/ioutil"
 	"log"
 	"os"
@@ -11,31 +10,33 @@ import (
 )
 
 type Line struct {
-	isComment bool
-	key string
-	value string
-
+	IsComment bool
+	Key string
+	Value string
+	Content string
 }
 
 func parseLine(line string) Line{
-	parts := strings.Split(line, " ")
+	parts := strings.Split(line, ":")
 	var temp Line
 
 	if (len(parts) == 2 ){
-	temp.key = parts[0]
-	temp.value = parts[1]
-	temp.isComment = false
+	temp.Key = parts[0]
+	temp.Value = parts[1]
+	temp.IsComment = false
 	} else if (len(parts) == 3) {
-	temp.key = parts[0]
-	temp.value = parts[1]
-	temp.isComment = false
-	} 
+	temp.Key = parts[1]
+	temp.Value = parts[2]
+	temp.IsComment = true
+	} else{
+		temp.Content = line
+	}
 	
 	return temp
 }
 
 
-func readLineByLine(filePath string) []Line{
+func ReadLineByLine(filePath string) []Line{
 var lines []Line
 
 file, err := os.Open(filePath)
@@ -75,9 +76,6 @@ func parseYaml(fileName string) map[string]string {
 }
 
 func Execute() {
-
-	allLines := readLineByLine("config.yaml")
-	fmt.Println(allLines)
 }
 
 func init() {
