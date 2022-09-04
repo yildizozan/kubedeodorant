@@ -60,7 +60,7 @@ func printYaml(fileData []yamlparser.Line, filePath string){
 		if len(conf.Key) > 0 {	
 			if(conf.IsComment){
 				fmt.Println("test")
-				_, err2 := f.WriteString("# " + conf.Key + ":" + conf.Value + "\n")
+				_, err2 := f.WriteString("# " + conf.Key + ": " + conf.Value + "\n")
 			
 				if err2 != nil {
 					log.Fatal(err2)
