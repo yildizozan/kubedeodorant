@@ -7,6 +7,8 @@ import (
 	"bufio"
 	"gopkg.in/yaml.v3"
 	"strings"
+	"fmt"
+    "io/fs"
 )
 
 type Line struct {
@@ -17,15 +19,17 @@ type Line struct {
 }
 
 func parseLine(line string) Line{
-	parts := strings.Split(line, ":")
+	parts := strings.Split(line, " ")
 	var temp Line
 
 	if (len(parts) == 2 ){
-	temp.Key = parts[0]
-	temp.Value = parts[1]
+	twoparts := strings.Split(line, ":")
+	temp.Key = twoparts[0]
+	temp.Value = twoparts[1]
 	temp.IsComment = false
 	} else if (len(parts) == 3) {
 	temp.Key = parts[1]
+	temp.Key = temp.Key[:len(temp.Key)-1]
 	temp.Value = parts[2]
 	temp.IsComment = true
 	} else{
@@ -73,6 +77,24 @@ func parseYaml(fileName string) map[string]string {
 	}
 
 	return data
+}
+
+func FilePath(fileName string) []string {
+    root := fileName
+    fileSystem := os.DirFS(root)
+    var pathSlice []string
+
+    fs.WalkDir(fileSystem, ".", func(path string, d fs.DirEntry, err error) error {
+        if err != nil {
+            log.Fatal(err)
+        }
+        if strings.HasSuffix(path, ".yaml") || strings.HasSuffix(path, ".yml") {
+            fmt.Println(path)
+            pathSlice = append(pathSlice, path)
+        }
+        return nil
+    })
+	return pathSlice
 }
 
 func Execute() {

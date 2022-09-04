@@ -5,34 +5,46 @@ import (
 	"kubed/yamlparser"
 	"log"
 	"os"
+	"fmt"
 )
 
 func OverrideYaml(configPath string){
 	configYaml := yamlparser.ReadLineByLine(configPath)
-	testYaml := yamlparser.ReadLineByLine("inventory/test.yaml")
-	var tempYaml []yamlparser.Line
+	fmt.Println(configYaml)
+	var fileNames []string
+	fileNames = yamlparser.FilePath("./inventory/")
 
-	for _, inv  := range testYaml {
-		
-		var tempLine yamlparser.Line
-		tempLine.Key = inv.Key
-		tempLine.Value = inv.Value
-		tempLine.IsComment = false
-		tempLine.Content = inv.Content
+	for _, filePath := range fileNames{
 
-		for _, conf := range configYaml {
-			if conf.Key == inv.Key {
-				tempLine.Value = conf.Value
-				if(conf.IsComment){
-					tempLine.IsComment = true
+		testYaml := yamlparser.ReadLineByLine("inventory/"+ filePath)
+		var tempYaml []yamlparser.Line
+	
+		for _, inv  := range testYaml {
+			
+			var tempLine yamlparser.Line
+			tempLine.Key = inv.Key
+			tempLine.Value = inv.Value
+			tempLine.IsComment = false
+			tempLine.Content = inv.Content
+	
+			for _, conf := range configYaml {
+				if conf.Key == inv.Key {
+					tempLine.Value = conf.Value
+					if(conf.IsComment){
+						tempLine.IsComment = true
+					}else{
+						tempLine.IsComment = false
+					}
 				}
 			}
+			tempYaml = append(tempYaml, tempLine)
+	
 		}
-		tempYaml = append(tempYaml, tempLine)
+	
+		printYaml(tempYaml, "inventory/" + filePath)
+		}
 
-	}
 
-	printYaml(tempYaml, "inventory/test1.yaml")
 }
 
 func printYaml(fileData []yamlparser.Line, filePath string){
@@ -46,11 +58,20 @@ func printYaml(fileData []yamlparser.Line, filePath string){
 
 	for _, conf := range fileData {
 		if len(conf.Key) > 0 {	
+			if(conf.IsComment){
+				fmt.Println("test")
+				_, err2 := f.WriteString("# " + conf.Key + ":" + conf.Value + "\n")
+			
+				if err2 != nil {
+					log.Fatal(err2)
+				}
+			}else{
 			_, err2 := f.WriteString(conf.Key + ":" + conf.Value + "\n")
 			
 			if err2 != nil {
 				log.Fatal(err2)
 			}
+		}
 		}else if len(conf.Content) > 0{
 			_, err2 := f.WriteString(conf.Content + "\n")
 			
